@@ -1,0 +1,23 @@
+div {
+	margin: 20px;
+}
+
+body > div {
+	margin: 50px 20px;
+}
+
+label {
+	display: block;
+}
+
+div.inputs {
+	vertical-align: top;
+	display: inline-block;
+}
+
+legend {
+	margin-bottom: 5px;
+	border-bottom: 1px solid;
+	padding-left: 5px;
+	font-weight: bold;
+}
