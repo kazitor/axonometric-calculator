@@ -1,9 +1,0 @@
-{
-	"name": "axonometric-calculator",
-	"version": "1.0.0",
-	"description": "Calculates side ratios of an axonometric projection and displays them with a canvas",
-	"author": "kazitor",
-	"dependencies": {
-		"jquery": "^3.1.0"
-	}
-}

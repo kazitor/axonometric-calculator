@@ -1,4 +1,15 @@
 var canvas = document.getElementById('axotool');
+var inputs = {
+	angle: [
+		document.getElementById('angle_left'),
+		document.getElementById('angle_right')
+	],
+	ratio: [
+		document.getElementById('ratio_left'),
+		document.getElementById('ratio_right'),
+		document.getElementById('ratio_top'),
+	]
+}
 var data = {
 	angles: {
 		left: 100 * Math.PI/180,
@@ -21,16 +32,18 @@ if (canvas.getContext) {
 	console.log("no canvas support");
 }
 
-$("#axotool").mousemove(handleMouse).mousedown(handleMouse).mouseup(handleMouse);
+canvas.addEventListener('mousemove', handleMouse);
+canvas.addEventListener('mousedown', handleMouse);
+canvas.addEventListener('mouseup',   handleMouse);
 
-$("input[name^=\"angle_\"]").change(updateRatio);
-$("input[name^=\"angle_\"]").keydown(function () {
-	setTimeout(updateRatio, 5);
-});
+for (var i = 0; i < inputs.angle.length; i++) {
+	inputs.angle[i].addEventListener('change', updateRatio);
+	inputs.angle[i].addEventListener('keydown', function () {
+		setTimeout(updateRatio, 0);
+	});
+}
 
 function draw(mouse) {
-	$('#out').text(`x: ${mouse.x} y: ${mouse.y} b: ${mouse.b}`);
-
 	if (mouse.b & 1) {
 		if (axis===null) {
 			axis = (mouse.x>100) ? 1 : -1;
@@ -39,11 +52,7 @@ function draw(mouse) {
 		angle = axis * (Math.PI/2 - angle);
 		if (angle<0) angle+= 2*Math.PI;
 
-		if (axis==1) {
-			$('#angle_right').val(Math.deg(angle));
-		} else {
-			$('#angle_left').val(Math.deg(angle));
-		}
+		inputs.angle[(axis == 1) ? 1 : 0].value = Math.deg(angle);
 
 		updateRatio();
 	} else {
@@ -72,14 +81,14 @@ function handleMouse(e) {
 }
 
 function updateRatio() {
-	data.angles.left  = Math.rad($("#angle_left" ).val());
-	data.angles.right = Math.rad($("#angle_right").val());
+	data.angles.left  = Math.rad(inputs.angle[0].value);
+	data.angles.right = Math.rad(inputs.angle[1].value);
 
 	data.ratio = calcRatio(data.angles.left, data.angles.right);
 
-	$("#ratio_left" ).val(data.ratio.left);
-	$("#ratio_top"  ).val(data.ratio.top);
-	$("#ratio_right").val(data.ratio.right);
+	inputs.ratio[0].value = data.ratio.left;
+	inputs.ratio[1].value = data.ratio.right;
+	inputs.ratio[2].value = data.ratio.top;
 
 	drawAxes();
 }
