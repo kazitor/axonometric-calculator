@@ -12,8 +12,8 @@
 		<div>
 			<div class="inputs">
 				<legend>Angles</legend>
-				<label for="angle_left">Left angle</label> <input type="number" min=0 max=360 class="input-mini" id="angle_left" name="angle_left" value="100">
-				<label for="angle_right">Right angle</label> <input type="number" min=0 max=360 class="input-mini" id="angle_right" name="angle_right" value="120">
+				<label for="angle_left">Left angle</label> <input type="number" min=90 max=180 class="input-mini" id="angle_left" name="angle_left" value="100">
+				<label for="angle_right">Right angle</label> <input type="number" min=90 max=180 class="input-mini" id="angle_right" name="angle_right" value="120">
 			</div>
 
 			<div class="inputs">
@@ -24,10 +24,10 @@
 			</div>
 		</div>
 
-		<p>A Javascript tool for determining the side ratios of an <a href="https://en.wikipedia.org/wiki/Axonometric_projection">axonometric projection</a>, using the angles. <noscript>Enable javascript, duh.</noscript></p>
-	    <p>Left angle represents the left line measured anticlockwise from the top. Right angle is the right line measured clockwise from the top. Both can be greater than 180&deg;.</p>
-	    <p>Either edit the angles in the boxes below, or (much more fun) use the diagram. Click left of the origin and drag to change the left angle. Start on the right to change the right angle. You can move to the other side, but only <abbr title="Specifically, those with an even number (0 or 2) of pairs of lines that are within 90&deg; of each other.">certain ranges</abbr> will yield proper results.</p>
-	    <p>Formulae adapted somewhat horribly from <a href="http://tamivox.org/redbear/axono/index.html">here</a>. Couldn&rsquo;t find equations anywhere else.</p>
+		<p>A Javascript tool for determining the side ratios of an <a href="https://en.wikipedia.org/wiki/Axonometric_projection">axonometric projection</a>, using the angles. <noscript>JavaScript must be enabled.</noscript></p>
+	    <p>Left angle represents the left line measured anticlockwise from the top. Right angle is the right line measured clockwise from the top.</p>
+	    <p>Either edit the angles in the boxes below, or use the diagram. Click or drag on the left side of the diagram to change the left angle, and use the right side to change the right angle.</p>
+	    <p>Formulae adapted from <a href="http://tamivox.org/redbear/axono/index.html">this page</a>.</p>
 	</div>
 
 	<script type="text/javascript" src="axonometric.js"></script>

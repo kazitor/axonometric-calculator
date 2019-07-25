@@ -1,3 +1,4 @@
+'use strict';
 var canvas = document.getElementById('axotool');
 var inputs = {
 	angle: [
@@ -46,7 +47,16 @@ function handleMouse(e) {
 		}
 		var angle = Math.atan2(100-e.offsetY,e.offsetX-100);
 		angle = axis * (Math.PI/2 - angle);
-		if (angle<0) angle+= 2*Math.PI;
+		if(angle<0)
+			angle += 2*Math.PI;
+
+		if(angle > Math.PI)
+			angle -= Math.PI;
+
+		if(angle < Math.PI/2)
+			angle = Math.PI/2;
+		else if(angle > Math.rad(270 - inputs.angle[(axis == 1) ? 0 : 1].value))
+			angle = Math.rad(270 - inputs.angle[(axis == 1) ? 0 : 1].value);
 
 		inputs.angle[(axis == 1) ? 1 : 0].value = Math.deg(angle);
 
@@ -60,21 +70,45 @@ function updateRatio() {
 	var angles = inputs.angle.map(function(input) {
 		return Math.rad(input.value);
 	});
-	var ratios = calcRatio(angles);
+	var ratio = calcRatio(angles);
 
-	for (var i = 0; i < ratios.length; i++) {
-		inputs.ratio[i].value = ratios[i];
+	for (var i = 0; i < ratio.length; i++) {
+		inputs.ratio[i].value = ratio[i];
 	}
 
+	updateState(angles, ratio);
+}
+
+function updateState(angles, ratio) {
+	inputs.angle[0].max = 270 - Math.deg(angles[1]);
+	inputs.angle[1].max = 270 - Math.deg(angles[0]);
+
 	ctx.clearRect(0, 0, 200, 200);
+
+	ctx.save();
+	ctx.globalAlpha = 0.05;
+
+	ctx.fillStyle = '#ff0000';
+	ctx.beginPath();
+	ctx.moveTo(100,100);
+	ctx.arc(100,100,100,Math.PI,angles[1],true);
+	ctx.fill();
+
+	ctx.fillStyle = '#00ff00';
+	ctx.beginPath();
+	ctx.moveTo(100,100);
+	ctx.arc(100,100,100,0,Math.PI-angles[0],false);
+	ctx.fill();
+
+	ctx.restore();
 
 	ctx.beginPath();
 	ctx.arc(100,100,5,0,2*Math.PI,true);
 	ctx.fill();
 
-	drawAxis('#ff0000', ratios[0], Math.PI/2 + angles[0]);
-	drawAxis('#00ff00', ratios[1], Math.PI/2 - angles[1]);
-	drawAxis('#0000ff', ratios[2], Math.PI/2);
+	drawAxis('#ff0000', ratio[0], Math.PI/2 + angles[0]);
+	drawAxis('#00ff00', ratio[1], Math.PI/2 - angles[1]);
+	drawAxis('#0000ff', ratio[2], Math.PI/2);
 }
 
 function drawAxis(colour, r, angle) {
