@@ -36,10 +36,7 @@ canvas.addEventListener('mousedown', handleMouse);
 canvas.addEventListener('mouseup',   handleMouse);
 
 for (var i = 0; i < inputs.angle.length; i++) {
-	inputs.angle[i].addEventListener('change', updateRatio);
-	inputs.angle[i].addEventListener('keydown', function () {
-		setTimeout(updateRatio, 0);
-	});
+	inputs.angle[i].addEventListener('input', updateRatio);
 }
 
 function handleMouse(e) {
@@ -63,11 +60,11 @@ function updateRatio() {
 	var angles = inputs.angle.map(function(input) {
 		return Math.rad(input.value);
 	});
-	var ratio = calcRatio(angles);
+	var ratios = calcRatio(angles);
 
-	inputs.ratio[0].value = ratio.left;
-	inputs.ratio[1].value = ratio.right;
-	inputs.ratio[2].value = ratio.top;
+	for (var i = 0; i < ratios.length; i++) {
+		inputs.ratio[i].value = ratios[i];
+	}
 
 	ctx.clearRect(0, 0, 200, 200);
 
@@ -75,16 +72,31 @@ function updateRatio() {
 	ctx.arc(100,100,5,0,2*Math.PI,true);
 	ctx.fill();
 
-	drawAxis(ratio.top, Math.PI/2);
-	drawAxis(ratio.left, angles[0] +Math.PI/2);
-	drawAxis(ratio.right,Math.PI/2 - angles[1]);
+	drawAxis('#ff0000', ratios[0], Math.PI/2 + angles[0]);
+	drawAxis('#00ff00', ratios[1], Math.PI/2 - angles[1]);
+	drawAxis('#0000ff', ratios[2], Math.PI/2);
 }
 
-function drawAxis(r, t) {
+function drawAxis(colour, r, angle) {
 	length=100*r;
+	ctx.strokeStyle = colour;
+
+	ctx.globalAlpha = 0.3;
 	ctx.beginPath();
 	ctx.moveTo(100,100);
-	ctx.lineTo(100 + length * Math.cos(t), 100 + length * -Math.sin(t));
+	ctx.lineTo(
+		100 + length * Math.cos(angle + Math.PI),
+		100 - length * Math.sin(angle + Math.PI)
+	);
+	ctx.stroke();
+
+	ctx.globalAlpha = 1;
+	ctx.beginPath();
+	ctx.moveTo(100,100);
+	ctx.lineTo(
+		100 + length * Math.cos(angle),
+		100 - length * Math.sin(angle)
+	);
 	ctx.stroke();
 }
 
@@ -93,9 +105,9 @@ function calcRatio(angles) {
 	var RT = Math.tan(angles[0] - Math.PI/2);
 	var CT = Math.tan(3*Math.PI/2 - angles[0] - angles[1]);
 	
-	return {
-		right: Math.sqrt(1 - CT*LT),
-		top:   Math.sqrt(1 - LT*RT),
-		left:  Math.sqrt(1 - RT*CT)
-	};
+	return [
+		Math.sqrt(1 - RT*CT),
+		Math.sqrt(1 - CT*LT),
+		Math.sqrt(1 - LT*RT)
+	];
 }
